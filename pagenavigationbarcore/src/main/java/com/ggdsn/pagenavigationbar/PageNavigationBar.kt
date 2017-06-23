@@ -49,6 +49,10 @@ class PageNavigationBar @JvmOverloads constructor(
      */
     private var linex: Int = 0
 
+    private val maxHeightDp: Int = 64
+
+    private var maxTextWidth: Int? = 0
+
     init {
         val res = context.resources
         displayMetrics = res.displayMetrics
@@ -57,16 +61,16 @@ class PageNavigationBar @JvmOverloads constructor(
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             forwardArrow = context.getDrawable(R.drawable.selector_pagenavigationbar_forward_arrow)
-            backArrow = context.getDrawable(R.drawable.ic_arrow_back_black_24dp)
+            backArrow = context.getDrawable(R.drawable.ic_arrow_back_white_24dp)
         } else {
             forwardArrow = res.getDrawable(R.drawable.selector_pagenavigationbar_forward_arrow)
-            backArrow = res.getDrawable(R.drawable.ic_arrow_back_black_24dp)
+            backArrow = res.getDrawable(R.drawable.ic_arrow_back_white_24dp)
         }
 
-        backArrowView.setImageResource(R.drawable.ic_arrow_back_black_24dp)
+        backArrowView.setImageResource(R.drawable.ic_arrow_back_white_24dp)
         setBackgroundResource(R.drawable.shape_page_navigation_bar_background)
 
-        backArrowView.setImageResource(R.drawable.ic_arrow_back_black_24dp)
+        backArrowView.setImageResource(R.drawable.ic_arrow_back_white_24dp)
         forwardArrowView.setImageResource(R.drawable.selector_pagenavigationbar_forward_arrow)
 
         textView.gravity = Gravity.CENTER
@@ -84,11 +88,10 @@ class PageNavigationBar @JvmOverloads constructor(
         addView(backArrowView)
         addView(textView)
         addView(forwardArrowView)
+
+        backArrowView.setOnClickListener { previousStep() }
+        forwardArrowView.setOnClickListener { nextStep() }
     }
-
-    private val maxHeightDp: Int = 64
-
-    private var maxTextWidth: Int? = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
@@ -122,7 +125,7 @@ class PageNavigationBar @JvmOverloads constructor(
         setPadding(minPadding, paddingTop, minPadding, paddingBottom)
 
         maxTextWidth = width - paddingLeft - paddingRight - contentHeight
-        textView.measure(MeasureSpec.makeMeasureSpec(maxTextWidth!!, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(contentHeight, MeasureSpec.AT_MOST))
+        textView.measure(MeasureSpec.makeMeasureSpec(maxTextWidth!!, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(contentHeight, MeasureSpec.EXACTLY))
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -152,8 +155,26 @@ class PageNavigationBar @JvmOverloads constructor(
     }
 
     fun setStep(step: Int) {
-        if (step < 0 || step > steps.size) {
-            throw IllegalArgumentException("step $step is out of bounds, steps size is ${steps.size}")
+        fun showState(state: Int) {
+            when (state) {
+                STATE_INIT -> {
+                    post {
+                        lineScroller.startScroll(linex, 0, -linex, 0)
+                        invalidate()
+                    }
+                }
+                STATE_MIDDLE -> {
+                    post {
+                        lineScroller.startScroll(0, 0, linex, 0)
+                        invalidate()
+                    }
+                }
+            }
+            this.state = state
+        }
+
+        if (step < 0 || step > steps.size || currentStepIdx == step) {
+            return
         }
         currentStepIdx = step
         val s = steps[step]
@@ -168,22 +189,8 @@ class PageNavigationBar @JvmOverloads constructor(
         }
     }
 
-    private fun showState(state: Int) {
-        when (state) {
-            STATE_INIT -> {
-                post {
-                    lineScroller.startScroll(linex, 0, -linex, 0)
-                    invalidate()
-                }
-            }
-            STATE_MIDDLE -> {
-                post {
-                    lineScroller.startScroll(0, 0, linex, 0)
-                    invalidate()
-                }
-            }
-        }
-        this.state = state
+    fun getCurrentStep(): Int {
+        return currentStepIdx
     }
 
     override fun computeScroll() {

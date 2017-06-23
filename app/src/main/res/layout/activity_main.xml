@@ -18,18 +18,21 @@
 		app:layout_constraintTop_toTopOf="parent"
 		/>
 	<com.ggdsn.pagenavigationbar.PageNavigationBar
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:id="@+id/bar1"
-		android:text="@string/app_name"
-		android:enabled="false"
+		app:text="@string/app_name"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
 		/>
 	<com.ggdsn.pagenavigationbar.PageNavigationBar
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:text="@string/app_name"
 		app:layout_constraintBottom_toTopOf="@+id/bar1"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
 		/>
 	<Button
 		android:layout_width="wrap_content"

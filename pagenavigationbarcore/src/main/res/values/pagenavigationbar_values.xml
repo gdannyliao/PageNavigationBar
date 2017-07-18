@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<declare-styleable name="PageNavigationBar">
-		<attr name="text"
+		<attr name="pageNavigationBarTitle"
 			format="string"/>
 	</declare-styleable>
+
+	<dimen name="pagenavigationbarPadding">2dp</dimen>
+
+	<color name="pagenavigationbarBackground">#42454c</color>
+	<color name="pagenavigationbarDisableText">#a0a2a5</color>
+	<color name="pagenavigationbarForwardArrowEnable">#a7cd45</color>
+	<color name="pagenavigationbarForwardArrowDisable">#748948</color>
 </resources>

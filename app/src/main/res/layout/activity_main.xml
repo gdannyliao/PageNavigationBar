@@ -13,7 +13,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/bar1"
-		app:text="@string/app_name"
+		app:pageNavigationBarTitle="@string/app_name"
 		/>
 	<com.ggdsn.pagenavigationbar.PageNavigationBar
 		android:layout_width="match_parent"

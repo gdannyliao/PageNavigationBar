@@ -60,28 +60,28 @@ class PageNavigationBar @JvmOverloads constructor(
         paint.color = Color.WHITE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            forwardArrow = context.getDrawable(R.drawable.selector_pagenavigationbar_forward_arrow)
-            backArrow = context.getDrawable(R.drawable.ic_arrow_back_white_24dp)
+            forwardArrow = context.getDrawable(R.drawable.pagenavigationbar_selector_forward_arrow)
+            backArrow = context.getDrawable(R.drawable.pagenavigationbar_ic_arrow_back_white_24dp)
         } else {
-            forwardArrow = res.getDrawable(R.drawable.selector_pagenavigationbar_forward_arrow)
-            backArrow = res.getDrawable(R.drawable.ic_arrow_back_white_24dp)
+            forwardArrow = res.getDrawable(R.drawable.pagenavigationbar_selector_forward_arrow)
+            backArrow = res.getDrawable(R.drawable.pagenavigationbar_ic_arrow_back_white_24dp)
         }
 
-        backArrowView.setImageResource(R.drawable.ic_arrow_back_white_24dp)
-        setBackgroundResource(R.drawable.shape_page_navigation_bar_background)
+        backArrowView.setImageResource(R.drawable.pagenavigationbar_ic_arrow_back_white_24dp)
+        setBackgroundResource(R.drawable.pagenavigationbar_shape_background)
 
-        backArrowView.setImageResource(R.drawable.ic_arrow_back_white_24dp)
-        forwardArrowView.setImageResource(R.drawable.selector_pagenavigationbar_forward_arrow)
+        backArrowView.setImageResource(R.drawable.pagenavigationbar_ic_arrow_back_white_24dp)
+        forwardArrowView.setImageResource(R.drawable.pagenavigationbar_selector_forward_arrow)
 
         textView.gravity = Gravity.CENTER
 
         if (isInEditMode) {
             textView.text = "选择订单"
         } else {
-            textView.setTextColor(res.getColorStateList(R.color.selector_pagenavigationbar_text))
+            textView.setTextColor(res.getColorStateList(R.color.pagenavigationbar_selector_text))
 
             val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.PageNavigationBar, defStyleAttr, 0)
-            textView.text = typedArray.getString(R.styleable.PageNavigationBar_text)
+            textView.text = typedArray.getString(R.styleable.PageNavigationBar_pageNavigationBarTitle)
             typedArray.recycle()
         }
 
@@ -141,6 +141,8 @@ class PageNavigationBar @JvmOverloads constructor(
     }
 
     fun setTitles(titles: List<String>, initStep: Int) {
+        //currentStepIdx设置成-1，免得走到setStep()中currentStepIdx==step直接return了
+        currentStepIdx = -1
         steps.clear()
         steps.addAll(titles)
         setStep(initStep)
